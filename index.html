@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FunZone - Interactive Playground</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* Animated Background Particles */
+      .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      .particle {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        animation: float 15s infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) translateX(0) rotate(0deg);
+        }
+        33% {
+          transform: translateY(-100px) translateX(50px) rotate(120deg);
+        }
+        66% {
+          transform: translateY(-50px) translateX(-50px) rotate(240deg);
+        }
+      }
+
+      /* Navbar Styling */
+      .navbar {
+        background: rgba(255, 255, 255, 0.1) !important;
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: white !important;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-link {
+        color: rgba(255, 255, 255, 0.9) !important;
+        transition: all 0.3s;
+        position: relative;
+      }
+
+      .nav-link:hover {
+        color: white !important;
+        transform: translateY(-2px);
+      }
+
+      /* Hero Section */
+      .hero {
+        padding: 100px 0 50px;
+        text-align: center;
+        color: white;
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+        animation: slideInDown 1s ease-out;
+      }
+
+      @keyframes slideInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Interactive Cards */
+      .fun-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 30px;
+        margin: 20px 0;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+
+      .fun-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+      }
+
+      .fun-card i {
+        font-size: 3rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 15px;
+      }
+
+      /* Color Picker Section */
+      .color-picker-box {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      #colorDisplay {
+        height: 150px;
+        border-radius: 10px;
+        transition: all 0.3s;
+        border: 3px solid #ddd;
+        background: #667eea;
+      }
+
+      /* Counter Section */
+      .counter-display {
+        font-size: 4rem;
+        font-weight: 700;
+        color: #667eea;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Image Gallery */
+      .gallery-img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 15px;
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+
+      .gallery-img:hover {
+        transform: scale(1.05) rotate(2deg);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Progress Skill Bars */
+      .skill-bar {
+        background: #e9ecef;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 15px 0;
+      }
+
+      .skill-progress {
+        height: 30px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        color: white;
+        font-weight: 600;
+        transition: width 2s ease-out;
+        width: 0%;
+      }
+
+      .carousel-icon {
+        font-size: 4rem;
+      }
+
+      /* Toast Notification */
+      .toast-container {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        z-index: 1050;
+      }
+
+      /* Accordion Custom */
+      .accordion-button:not(.collapsed) {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      /* Button Styles */
+      .btn-custom {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-custom:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        color: white;
+      }
+
+      /* Modal Custom */
+      .modal-content {
+        border-radius: 20px;
+        border: none;
+      }
+
+      .modal-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 20px 20px 0 0;
+      }
+
+      /* Quiz Section */
+      .quiz-option {
+        padding: 15px;
+        margin: 10px 0;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .quiz-option:hover {
+        background: #f8f9fa;
+        border-color: #667eea;
+      }
+
+      .quiz-option.correct {
+        background: #d4edda;
+        border-color: #28a745;
+      }
+
+      .quiz-option.wrong {
+        background: #f8d7da;
+        border-color: #dc3545;
+      }
+
+      /* Timer Display */
+      .timer {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #667eea;
+      }
+
+      /* Footer */
+      footer {
+        background: rgba(0, 0, 0, 0.3);
+        color: white;
+        padding: 30px 0;
+        margin-top: 50px;
+      }
+
+      /* Animations */
+      .bounce {
+        animation: bounce 2s infinite;
+      }
+
+      @keyframes bounce {
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-20px);
+        }
+        60% {
+          transform: translateY(-10px);
+        }
+      }
+
+      .pulse {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Spinner Animation */
+      .spinner-custom {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Animated Background Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#"><i class="bi bi-stars"></i> FunZone</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="#interactive">Interactive</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#gallery">Gallery</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#quiz">Quiz</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="#about">About</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+      <div class="container">
+        <h1 class="bounce">
+          <i class="bi bi-emoji-sunglasses"></i> Welcome to FunZone!
+        </h1>
+        <p class="lead mb-4">
+          An interactive playground with cool Bootstrap elements and animations
+        </p>
+        <button class="btn btn-custom btn-lg" onclick="showWelcomeModal()">
+          <i class="bi bi-rocket-takeoff"></i> Get Started
+        </button>
+      </div>
+    </section>
+
+    <!-- Interactive Features -->
+    <section id="interactive" class="py-5">
+      <div class="container">
+        <h2 class="text-center text-white mb-5">
+          <i class="bi bi-lightning-charge"></i> Interactive Features
+        </h2>
+
+        <div class="row">
+          <!-- Counter Card -->
+          <div class="col-md-4">
+            <div class="fun-card text-center">
+              <i class="bi bi-123"></i>
+              <h3>Click Counter</h3>
+              <div class="counter-display my-3" id="counterDisplay">0</div>
+              <button class="btn btn-custom" onclick="incrementCounter()">
+                <i class="bi bi-plus-circle"></i> Click Me!
+              </button>
+              <button
+                class="btn btn-outline-secondary ms-2"
+                onclick="resetCounter()"
+              >
+                <i class="bi bi-arrow-counterclockwise"></i> Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Color Picker Card -->
+          <div class="col-md-4">
+            <div class="fun-card text-center">
+              <i class="bi bi-palette"></i>
+              <h3>Color Magic</h3>
+              <div id="colorDisplay" class="my-3"></div>
+              <button class="btn btn-custom" onclick="randomColor()">
+                <i class="bi bi-shuffle"></i> Random Color
+              </button>
+              <p class="mt-2" id="colorCode">#667eea</p>
+            </div>
+          </div>
+
+          <!-- Timer Card -->
+          <div class="col-md-4">
+            <div class="fun-card text-center">
+              <i class="bi bi-clock"></i>
+              <h3>Stopwatch</h3>
+              <div class="timer my-3" id="timerDisplay">00:00</div>
+              <button
+                class="btn btn-custom"
+                id="timerBtn"
+                onclick="toggleTimer()"
+              >
+                <i class="bi bi-play-fill"></i> Start
+              </button>
+              <button
+                class="btn btn-outline-secondary ms-2"
+                onclick="resetTimer()"
+              >
+                <i class="bi bi-stop-fill"></i> Reset
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bars -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="fun-card">
+              <h3 class="text-center mb-4">
+                <i class="bi bi-graph-up"></i> Skill Levels
+              </h3>
+              <div class="skill-bar">
+                <div class="skill-progress" id="skill1">HTML - 90%</div>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-progress" id="skill2">CSS - 85%</div>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-progress" id="skill3">JavaScript - 80%</div>
+              </div>
+              <div class="skill-bar">
+                <div class="skill-progress" id="skill4">Bootstrap - 95%</div>
+              </div>
+              <button class="btn btn-custom mt-3" onclick="animateSkills()">
+                <i class="bi bi-arrow-right-circle"></i> Animate Skills
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-5">
+      <div class="container">
+        <h2 class="text-center text-white mb-5">
+          <i class="bi bi-images"></i> Image Gallery
+        </h2>
+        <div class="row">
+          <div class="col-md-4 mb-4">
+            <img
+              src="https://picsum.photos/400/300?random=1"
+              class="gallery-img"
+              alt="Gallery Image 1"
+              onclick="showImageModal(this.src)"
+            />
+          </div>
+          <div class="col-md-4 mb-4">
+            <img
+              src="https://picsum.photos/400/300?random=2"
+              class="gallery-img"
+              alt="Gallery Image 2"
+              onclick="showImageModal(this.src)"
+            />
+          </div>
+          <div class="col-md-4 mb-4">
+            <img
+              src="https://picsum.photos/400/300?random=3"
+              class="gallery-img"
+              alt="Gallery Image 3"
+              onclick="showImageModal(this.src)"
+            />
+          </div>
+          <div class="col-md-4 mb-4">
+            <img
+              src="https://picsum.photos/400/300?random=4"
+              class="gallery-img"
+              alt="Gallery Image 4"
+              onclick="showImageModal(this.src)"
+            />
+          </div>
+          <div class="col-md-4 mb-4">
+            <img
+              src="https://picsum.photos/400/300?random=5"
+              class="gallery-img"
+              alt="Gallery Image 5"
+              onclick="showImageModal(this.src)"
+            />
+          </div>
+          <div class="col-md-4 mb-4">
+            <img
+              src="https://picsum.photos/400/300?random=6"
+              class="gallery-img"
+              alt="Gallery Image 6"
+              onclick="showImageModal(this.src)"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section id="quiz" class="py-5">
+      <div class="container">
+        <h2 class="text-center text-white mb-5">
+          <i class="bi bi-question-circle"></i> Fun Quiz
+        </h2>
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            <div class="fun-card">
+              <h4 id="quizQuestion">What is the capital of France?</h4>
+              <div id="quizOptions">
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                  London
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, true)">
+                  Paris
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                  Berlin
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                  Madrid
+                </div>
+              </div>
+              <div class="text-center mt-3">
+                <button class="btn btn-custom" onclick="nextQuestion()">
+                  <i class="bi bi-arrow-right"></i> Next Question
+                </button>
+                <div class="mt-3">
+                  <strong>Score: <span id="quizScore">0</span></strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Accordion Section -->
+    <section id="about" class="py-5">
+      <div class="container">
+        <h2 class="text-center text-white mb-5">
+          <i class="bi bi-info-circle"></i> About This Project
+        </h2>
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            <div class="accordion" id="accordionExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button
+                    class="accordion-button"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseOne"
+                  >
+                    <i class="bi bi-code-slash me-2"></i> Technologies Used
+                  </button>
+                </h2>
+                <div
+                  id="collapseOne"
+                  class="accordion-collapse collapse show"
+                  data-bs-parent="#accordionExample"
+                >
+                  <div class="accordion-body">
+                    <ul>
+                      <li>
+                        <strong>Bootstrap 5</strong> - For responsive design and
+                        components
+                      </li>
+                      <li>
+                        <strong>CSS3</strong> - For custom animations and
+                        styling
+                      </li>
+                      <li>
+                        <strong>JavaScript</strong> - For interactivity and
+                        dynamic content
+                      </li>
+                      <li>
+                        <strong>Bootstrap Icons</strong> - For beautiful icons
+                      </li>
+                      <li>
+                        <strong>Google Fonts</strong> - Poppins font family
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo"
+                  >
+                    <i class="bi bi-star me-2"></i> Features
+                  </button>
+                </h2>
+                <div
+                  id="collapseTwo"
+                  class="accordion-collapse collapse"
+                  data-bs-parent="#accordionExample"
+                >
+                  <div class="accordion-body">
+                    <ul>
+                      <li>Animated background particles</li>
+                      <li>Interactive counter and timer</li>
+                      <li>Random color generator</li>
+                      <li>Animated progress bars</li>
+                      <li>Interactive image gallery</li>
+                      <li>Fun quiz with score tracking</li>
+                      <li>Responsive design for all devices</li>
+                      <li>Smooth animations and transitions</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseThree"
+                  >
+                    <i class="bi bi-heart me-2"></i> Fun Facts
+                  </button>
+                </h2>
+                <div
+                  id="collapseThree"
+                  class="accordion-collapse collapse"
+                  data-bs-parent="#accordionExample"
+                >
+                  <div class="accordion-body">
+                    This single-file website demonstrates the power of modern
+                    web technologies! Everything you see - the animations,
+                    interactivity, and responsive design - is contained in one
+                    HTML file with embedded CSS and JavaScript. Perfect for
+                    learning and experimenting!
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cards Carousel -->
+    <section class="py-5">
+      <div class="container">
+        <h2 class="text-center text-white mb-5">
+          <i class="bi bi-collection"></i> Featured Cards
+        </h2>
+        <div id="carouselCards" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-indicators">
+            <button
+              type="button"
+              data-bs-target="#carouselCards"
+              data-bs-slide-to="0"
+              class="active"
+              aria-label="Slide 1"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselCards"
+              data-bs-slide-to="1"
+              aria-label="Slide 2"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselCards"
+              data-bs-slide-to="2"
+              aria-label="Slide 3"
+            ></button>
+          </div>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="fun-card text-center">
+                <i class="bi bi-trophy carousel-icon"></i>
+                <h3>Achievement Unlocked!</h3>
+                <p>You've discovered the carousel feature. Keep exploring!</p>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="fun-card text-center">
+                <i class="bi bi-gift carousel-icon"></i>
+                <h3>Surprise!</h3>
+                <p>
+                  This website is packed with interactive elements. Try clicking
+                  everything!
+                </p>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="fun-card text-center">
+                <i class="bi bi-lightbulb carousel-icon"></i>
+                <h3>Did You Know?</h3>
+                <p>
+                  Bootstrap makes it super easy to create responsive, beautiful
+                  websites!
+                </p>
+              </div>
+            </div>
+          </div>
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselCards"
+            data-bs-slide="prev"
+            aria-label="Previous slide"
+          >
+            <span class="carousel-control-prev-icon"></span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselCards"
+            data-bs-slide="next"
+            aria-label="Next slide"
+          >
+            <span class="carousel-control-next-icon"></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center">
+      <div class="container">
+        <p class="mb-2">
+          <i class="bi bi-heart-fill text-danger"></i> Made with Bootstrap, CSS
+          & JavaScript
+        </p>
+        <p class="mb-3">Explore, Click, and Have Fun!</p>
+        <div>
+          <button
+            class="btn btn-outline-light mx-2"
+            onclick="showToast('Thanks for visiting!', 'success')"
+          >
+            <i class="bi bi-hand-thumbs-up"></i> Like
+          </button>
+          <button
+            class="btn btn-outline-light mx-2"
+            onclick="showToast('Shared to nowhere! 😄', 'info')"
+          >
+            <i class="bi bi-share"></i> Share
+          </button>
+          <button
+            class="btn btn-outline-light mx-2"
+            onclick="showToast('You just subscribed... to fun! 🎉', 'warning')"
+          >
+            <i class="bi bi-bell"></i> Subscribe
+          </button>
+        </div>
+        <p class="mt-3 mb-0">&copy; 2025 FunZone. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Welcome Modal -->
+    <div class="modal fade" id="welcomeModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-rocket-takeoff"></i> Welcome to FunZone!
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body text-center">
+            <div class="spinner-custom mx-auto mb-3"></div>
+            <h4>Get Ready for Fun!</h4>
+            <p>This interactive playground features:</p>
+            <ul class="text-start">
+              <li>Interactive counters and timers</li>
+              <li>Color generator</li>
+              <li>Animated progress bars</li>
+              <li>Image gallery</li>
+              <li>Fun quiz game</li>
+              <li>And much more!</li>
+            </ul>
+            <p class="text-muted">Start exploring by scrolling down!</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-custom"
+              data-bs-dismiss="modal"
+            >
+              <i class="bi bi-play-fill"></i> Let's Go!
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-image"></i> Image Preview
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body text-center">
+            <img
+              id="modalImage"
+              src=""
+              class="img-fluid rounded"
+              alt="Preview"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // Create animated particles
+      function createParticles() {
+        const container = document.getElementById("particles");
+        for (let i = 0; i < 20; i++) {
+          const particle = document.createElement("div");
+          particle.className = "particle";
+          particle.style.width = Math.random() * 10 + 5 + "px";
+          particle.style.height = particle.style.width;
+          particle.style.left = Math.random() * 100 + "%";
+          particle.style.top = Math.random() * 100 + "%";
+          particle.style.animationDelay = Math.random() * 15 + "s";
+          particle.style.animationDuration = Math.random() * 10 + 10 + "s";
+          container.appendChild(particle);
+        }
+      }
+
+      // Counter functionality
+      let counter = 0;
+      function incrementCounter() {
+        counter++;
+        document.getElementById("counterDisplay").textContent = counter;
+        if (counter % 10 === 0) {
+          showToast(`Wow! You've clicked ${counter} times! 🎉`, "success");
+        }
+      }
+
+      function resetCounter() {
+        counter = 0;
+        document.getElementById("counterDisplay").textContent = counter;
+        showToast("Counter reset!", "info");
+      }
+
+      // Random color generator
+      function randomColor() {
+        const color =
+          "#" +
+          Math.floor(Math.random() * 16777215)
+            .toString(16)
+            .padStart(6, "0");
+        document.getElementById("colorDisplay").style.background = color;
+        document.getElementById("colorCode").textContent = color;
+        showToast(`New color: ${color}`, "info");
+      }
+
+      // Timer functionality
+      let timerInterval;
+      let timerSeconds = 0;
+      let timerRunning = false;
+
+      function toggleTimer() {
+        const btn = document.getElementById("timerBtn");
+        if (!timerRunning) {
+          timerRunning = true;
+          btn.innerHTML = '<i class="bi bi-pause-fill"></i> Pause';
+          timerInterval = setInterval(() => {
+            timerSeconds++;
+            updateTimerDisplay();
+          }, 1000);
+        } else {
+          timerRunning = false;
+          btn.innerHTML = '<i class="bi bi-play-fill"></i> Start';
+          clearInterval(timerInterval);
+        }
+      }
+
+      function resetTimer() {
+        timerRunning = false;
+        timerSeconds = 0;
+        clearInterval(timerInterval);
+        updateTimerDisplay();
+        document.getElementById("timerBtn").innerHTML =
+          '<i class="bi bi-play-fill"></i> Start';
+      }
+
+      function updateTimerDisplay() {
+        const minutes = Math.floor(timerSeconds / 60);
+        const seconds = timerSeconds % 60;
+        document.getElementById("timerDisplay").textContent = `${String(
+          minutes
+        ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      }
+
+      // Animate skill bars
+      function animateSkills() {
+        document.getElementById("skill1").style.width = "90%";
+        setTimeout(
+          () => (document.getElementById("skill2").style.width = "85%"),
+          300
+        );
+        setTimeout(
+          () => (document.getElementById("skill3").style.width = "80%"),
+          600
+        );
+        setTimeout(
+          () => (document.getElementById("skill4").style.width = "95%"),
+          900
+        );
+        showToast("Skills animated!", "success");
+      }
+
+      // Quiz functionality
+      const quizQuestions = [
+        {
+          question: "What is the capital of France?",
+          options: ["London", "Paris", "Berlin", "Madrid"],
+          correct: 1,
+        },
+        {
+          question: "Which planet is known as the Red Planet?",
+          options: ["Venus", "Jupiter", "Mars", "Saturn"],
+          correct: 2,
+        },
+        {
+          question: "What is 2 + 2?",
+          options: ["3", "4", "5", "6"],
+          correct: 1,
+        },
+        {
+          question: "Which language is used for web apps?",
+          options: ["PHP", "Python", "JavaScript", "All of the above"],
+          correct: 3,
+        },
+        {
+          question: "What does CSS stand for?",
+          options: [
+            "Creative Style Sheets",
+            "Cascading Style Sheets",
+            "Computer Style Sheets",
+            "Colorful Style Sheets",
+          ],
+          correct: 1,
+        },
+      ];
+
+      let currentQuestion = 0;
+      let quizScore = 0;
+      let answered = false;
+
+      function checkAnswer(element, isCorrect) {
+        if (answered) return;
+        answered = true;
+
+        if (isCorrect) {
+          element.classList.add("correct");
+          quizScore++;
+          document.getElementById("quizScore").textContent = quizScore;
+          showToast("Correct! 🎉", "success");
+        } else {
+          element.classList.add("wrong");
+          showToast("Oops! Try the next one!", "danger");
+        }
+      }
+
+      function nextQuestion() {
+        answered = false;
+        currentQuestion = (currentQuestion + 1) % quizQuestions.length;
+        const q = quizQuestions[currentQuestion];
+
+        document.getElementById("quizQuestion").textContent = q.question;
+        const optionsDiv = document.getElementById("quizOptions");
+        optionsDiv.innerHTML = "";
+
+        q.options.forEach((option, index) => {
+          const div = document.createElement("div");
+          div.className = "quiz-option";
+          div.textContent = option;
+          div.onclick = () => checkAnswer(div, index === q.correct);
+          optionsDiv.appendChild(div);
+        });
+      }
+
+      // Toast notification
+      function showToast(message, type) {
+        const toastContainer = document.querySelector(".toast-container");
+        const toastId = "toast-" + Date.now();
+
+        const toastHTML = `
+                <div id="${toastId}" class="toast align-items-center text-white bg-${type} border-0" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">${message}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+
+        toastContainer.insertAdjacentHTML("beforeend", toastHTML);
+        const toastElement = document.getElementById(toastId);
+        const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+        toast.show();
+
+        toastElement.addEventListener("hidden.bs.toast", () => {
+          toastElement.remove();
+        });
+      }
+
+      // Show modals
+      function showWelcomeModal() {
+        const modal = new bootstrap.Modal(
+          document.getElementById("welcomeModal")
+        );
+        modal.show();
+      }
+
+      function showImageModal(src) {
+        document.getElementById("modalImage").src = src;
+        const modal = new bootstrap.Modal(
+          document.getElementById("imageModal")
+        );
+        modal.show();
+      }
+
+      // Smooth scrolling for nav links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      });
+
+      // Initialize on load
+      window.addEventListener("load", () => {
+        createParticles();
+        setTimeout(() => animateSkills(), 500);
+      });
+
+      // Easter egg - Konami code
+      let konamiCode = [];
+      const konamiPattern = [
+        "ArrowUp",
+        "ArrowUp",
+        "ArrowDown",
+        "ArrowDown",
+        "ArrowLeft",
+        "ArrowRight",
+        "ArrowLeft",
+        "ArrowRight",
+        "b",
+        "a",
+      ];
+
+      document.addEventListener("keydown", (e) => {
+        konamiCode.push(e.key);
+        konamiCode = konamiCode.slice(-10);
+
+        if (JSON.stringify(konamiCode) === JSON.stringify(konamiPattern)) {
+          showToast(
+            "🎮 KONAMI CODE ACTIVATED! You found the secret! 🎮",
+            "warning"
+          );
+          document.body.style.animation = "pulse 0.5s";
+          setTimeout(() => (document.body.style.animation = ""), 500);
+        }
+      });
+    </script>
+  </body>
+</html>
