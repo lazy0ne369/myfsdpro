@@ -1,0 +1,380 @@
+==============================================================
+  REACT MODEL 1 - CSS NOTES
+  (CSS explanations per page/component)
+  (This file will be updated as we progress)
+==============================================================
+
+
+==============================================================
+FILE 1: index.css (Global Base Styles)
+==============================================================
+FILE: src/index.css
+
+PURPOSE:
+- Sets global defaults for the entire app.
+- Applies the black-grey-white gradient as the GLOBAL background.
+- Originally from Vite's React template, modified for our app.
+
+BREAKDOWN:
+
+:root {
+  font-family: system-ui, ...    → Default font for the whole app
+  line-height: 1.5               → Space between lines of text
+  color-scheme: light dark        → Tells browser to support both themes
+  color: #fff                    → White text globally
+  background-color: transparent  → Let body gradient show through
+  font-synthesis: none            → Don't auto-generate bold/italic
+  text-rendering: optimizeLegibility → Smoother text
+  -webkit-font-smoothing          → Anti-aliasing for Mac/Chrome
+}
+
+body {
+  margin: 0                → Remove default body margin
+  min-width: 320px         → Minimum page width
+  min-height: 100vh        → Page takes at least full screen height
+  background: linear-gradient(135deg, #1a1a1a 0%, #444444 50%, #e0e0e0 100%)
+    → GLOBAL gradient: black → grey → white (diagonal)
+    → Applied here so ALL pages share the same background
+  background-attachment: fixed
+    → Gradient stays fixed while scrolling (doesn't move with content)
+}
+
+#root {
+  width: 100%              → Root div takes full width
+  min-height: 100vh        → Root div takes full height
+}
+  NOTE: Without this, the login card won't center properly!
+
+button (global) {
+  border-radius: 8px       → Rounded buttons by default
+  background-color: #1a1a1a → Dark button background
+  cursor: pointer           → Hand icon on hover
+}
+
+@media (prefers-color-scheme: light) {
+  → Colors stay the same (white text, transparent bg)
+  → We override Vite's default light mode to keep our theme consistent
+
+
+==============================================================
+FILE 2: App.css - LOGIN PAGE STYLES
+==============================================================
+COMPONENT: login.jsx
+CLASSES: .login-page, .login-card, .login-title, .login-subtitle,
+         .error-banner, .input-group, .login-btn, .demo-credentials
+
+─────────────────────────────────────
+
+.login-page {
+  min-height: 100vh        → Takes full screen height
+  display: flex            → Flexbox layout
+  justify-content: center  → Center horizontally
+  align-items: center      → Center vertically
+  (NO background here — uses the global body gradient)
+}
+
+  WHY flex + justify + align?
+  → This is the classic way to center something perfectly on a page.
+    flex makes the container a flexbox, justify-content centers the
+    child horizontally, align-items centers it vertically.
+
+  WHY NO background on login-page?
+  → The gradient was moved to body (index.css) so ALL pages
+    share the same background. login-page is now transparent.
+
+─────────────────────────────────────
+
+.login-card {
+  background: #fff         → White card
+  padding: 2.5rem 2rem     → Space inside (top/bottom 2.5, left/right 2)
+  border-radius: 12px      → Rounded corners
+  width: 380px             → Fixed width
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2)  → Drop shadow for depth
+}
+
+  WHAT IS box-shadow?
+  → box-shadow: X Y Blur Color
+    0    = no horizontal offset
+    8px  = push shadow 8px down
+    30px = blur radius (soft edges)
+    rgba(0,0,0,0.2) = black at 20% opacity
+
+─────────────────────────────────────
+
+.login-card.shake {
+  animation: shake 0.5s ease-in-out
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0) }    → Start & end at normal position
+  20%      { transform: translateX(-8px) }  → Move left
+  40%      { transform: translateX(8px) }   → Move right
+  60%      { transform: translateX(-6px) }  → Move left (less)
+  80%      { transform: translateX(6px) }   → Move right (less)
+}
+
+  WHAT IS @keyframes?
+  → Defines a custom animation step-by-step.
+    The shake moves the card left-right-left-right in 0.5 seconds.
+    Applied via className when user enters wrong credentials.
+
+─────────────────────────────────────
+
+.login-title {
+  font-size: 1.8rem       → Large heading
+  font-weight: 700        → Bold
+  color: #333             → Dark gray text
+  text-align: center      → Centered text
+}
+
+.login-subtitle {
+  font-size: 0.9rem       → Small text
+  color: #888             → Light gray
+  text-align: center
+}
+
+─────────────────────────────────────
+
+.error-banner {
+  display: flex            → Flexbox to align icon + text side by side
+  align-items: center      → Vertically center the content
+  gap: 0.5rem             → Space between icon and text
+  background-color: #fce8e6  → Light red background
+  border: 1px solid #f5c6cb → Soft red border
+  color: #cc0000           → Red text
+  border-radius: 6px
+}
+
+  WHY flex here?
+  → To place the ⚠ icon and error text side by side, centered.
+
+─────────────────────────────────────
+
+.input-group input {
+  width: 100%             → Full width of the card
+  padding: 0.85rem        → Inner spacing
+  border: 1px solid #ddd  → Light gray border
+  border-radius: 8px      → Rounded corners
+  background-color: #f9f9f9  → Slightly gray background
+  box-sizing: border-box  → Width includes padding + border
+  transition: border-color 0.2s, box-shadow 0.2s
+    → Smooth animation when focus changes
+}
+
+  WHAT IS box-sizing: border-box?
+  → By default, padding adds to the width. With border-box,
+    width: 100% means 100% INCLUDING padding & border.
+    Without it, inputs would overflow the card.
+
+.input-group input:focus {
+  border-color: #333      → Dark border when focused
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.15)  → Soft glow around input
+  background-color: #fff  → Pure white when typing
+}
+
+.input-group input.input-error {
+  border-color: #cc0000   → Red border when there's an error
+}
+
+─────────────────────────────────────
+
+.login-btn {
+  width: 100%             → Full width button
+  border: none            → No border
+  border-radius: 8px      → Rounded
+  background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%)
+    → Dark gradient matching the page theme
+  color: #fff
+  font-weight: 600        → Semi-bold text
+  cursor: pointer
+  transition: opacity 0.2s
+}
+
+.login-btn:hover {
+  opacity: 0.9            → Slightly transparent on hover
+}
+
+─────────────────────────────────────
+
+.demo-credentials {
+  text-align: center
+  color: #999             → Muted gray
+  margin: 1.5rem 0 0      → Space above only
+}
+
+
+==============================================================
+FILE 2: App.css - SIDEBAR / NAVBAR STYLES
+==============================================================
+COMPONENT: Navbar.jsx
+CLASSES: .sidebar, .sidebar ul li, .sidebar ul li.active,
+         .sidebar-footer, .logout-btn
+
+─────────────────────────────────────
+
+.app-layout {
+  display: flex            → Sidebar + main content side by side
+  min-height: 100vh        → Full screen height
+}
+
+  WHY flex?
+  → Makes sidebar sit on the left, and main-content fills the rest.
+
+─────────────────────────────────────
+
+.sidebar {
+  width: 220px             → Fixed width sidebar
+  background-color: #1a1a2e  → Very dark blue/navy
+  color: #fff              → White text
+  padding: 1.5rem 1rem
+  display: flex
+  flex-direction: column   → Stack items vertically
+}
+
+  WHY flex-direction: column?
+  → Menu title, links, and footer stack top-to-bottom.
+    Combined with margin-top: auto on footer, it pushes
+    the footer to the bottom of the sidebar.
+
+─────────────────────────────────────
+
+.sidebar ul {
+  list-style: none         → Remove bullet points
+  padding: 0; margin: 0   → Remove default spacing
+  display: flex
+  flex-direction: column   → Stack links vertically
+  gap: 0.75rem             → Space between each link
+}
+
+.sidebar ul li {
+  cursor: pointer          → Hand icon on hover
+  padding: 0.5rem 0.75rem → Clickable area padding
+  border-radius: 6px      → Rounded hover background
+  transition: background-color 0.2s  → Smooth hover effect
+}
+
+.sidebar ul li:hover {
+  background-color: #16213e  → Slightly lighter on hover
+}
+
+.sidebar ul li.active {
+  background-color: #0a66c2  → Blue highlight for current page
+  font-weight: 600           → Bold text for active page
+}
+
+  HOW ACTIVE WORKS:
+  → In Navbar.jsx: className={currentPage === 'home' ? 'active' : ''}
+    If the current page matches, 'active' class is added.
+    CSS then shows the blue background.
+
+─────────────────────────────────────
+
+.sidebar-footer {
+  margin-top: auto         → PUSHES footer to bottom of sidebar
+  padding-top: 1rem
+  border-top: 1px solid #444  → Separator line
+  text-align: center
+}
+
+  WHAT IS margin-top: auto?
+  → In a flex column, margin-top: auto on the last item
+    pushes it all the way to the bottom. This is how the
+    "Welcome, sohan" and Logout button stay at the bottom.
+
+─────────────────────────────────────
+
+.logout-btn {
+  border: none
+  border-radius: 6px
+  background-color: #e94560  → Red button
+  color: #fff
+  cursor: pointer
+}
+
+.logout-btn:hover {
+  background-color: #c73652  → Darker red on hover
+}
+
+
+==============================================================
+FILE 2: App.css - MAIN CONTENT AREA
+==============================================================
+COMPONENTS: Home.jsx, About.jsx, Contact.jsx
+
+.main-content {
+  flex: 1                  → Takes ALL remaining space after sidebar
+  padding: 2rem            → Space inside content area
+}
+
+  WHAT IS flex: 1?
+  → In the .app-layout flex container, sidebar is 220px fixed.
+    flex: 1 means "take all the remaining width."
+    If screen is 1200px: 1200 - 220 = 980px for content.
+
+
+==============================================================
+FILE 2: App.css - #root OVERRIDE
+==============================================================
+
+#root {
+  margin: 0
+  padding: 0
+}
+
+  → Overrides any default Vite margin/padding on the root div.
+    Ensures the app fills the full screen with no gaps.
+
+
+==============================================================
+CSS CONCEPTS SUMMARY:
+==============================================================
+
+1. Flexbox
+   - display: flex          → Make container a flexbox
+   - justify-content        → Horizontal alignment
+   - align-items            → Vertical alignment
+   - flex-direction: column → Stack children vertically
+   - flex: 1                → Fill remaining space
+   - gap                    → Space between flex children
+
+2. Centering (Login Card)
+   - display: flex + justify-content: center + align-items: center
+   - This is the most common way to center a div on a page
+
+3. linear-gradient()
+   - background: linear-gradient(angle, color1, color2, ...)
+   - Creates a smooth color transition
+   - 135deg = diagonal from top-left to bottom-right
+
+4. box-shadow
+   - box-shadow: X Y Blur Spread Color
+   - Adds depth/shadow behind elements
+
+5. @keyframes + animation
+   - Define step-by-step animation
+   - Apply with: animation: name duration timing
+
+6. transition
+   - Smooth property changes (hover, focus, etc.)
+   - transition: property duration
+   - e.g., transition: background-color 0.2s
+
+7. box-sizing: border-box
+   - Width includes padding + border
+   - Essential for inputs to not overflow containers
+
+8. margin-top: auto
+   - In flexbox, pushes element to the bottom
+   - Used for sidebar footer
+
+9. :hover / :focus pseudo-classes
+   - :hover  → When mouse is over element
+   - :focus  → When input is clicked/focused
+
+10. border-radius
+    - Rounds corners of elements
+    - Higher value = more rounded
+
+==============================================================
+  END OF CSS NOTES (will be updated as we add more features)
+==============================================================

@@ -1,0 +1,288 @@
+==============================================================
+  REACT MODEL 1 - PROJECT NOTES
+  (This file will be updated as we progress)
+  (For CSS explanations, see Notes_css.txt)
+==============================================================
+
+PROJECT STRUCTURE:
+─────────────────
+reactmodel1/
+├── public/
+├── src/
+│   ├── main.jsx             → Entry point
+│   ├── App.jsx              → Root component (controls routing & auth)
+│   ├── App.css              → All component styles
+│   ├── index.css            → Global base styles (Vite default)
+│   └── components/
+│       ├── login.jsx        → Login page (centered card)
+│       ├── Navbar.jsx       → Sidebar navigation
+│       ├── Home.jsx         → Home page
+│       ├── About.jsx        → About page
+│       └── Contact.jsx      → Contact page
+├── index.html
+├── package.json
+├── Notes.txt                → This file (React/JSX explanations)
+├── Notes_css.txt            → CSS explanations per component
+└── vite.config.js
+
+
+==============================================================
+PAGE 1: main.jsx (Entry Point)
+==============================================================
+FILE: src/main.jsx
+
+PURPOSE:
+- This is the very first file that runs.
+- It mounts the React app into the HTML page.
+
+KEY CONCEPTS:
+- createRoot()        → Creates the root React node (React 18+)
+- getElementById()    → Finds the <div id="root"> in index.html
+- .render()           → Renders the <App /> component into the root
+- <StrictMode>        → Enables extra development warnings
+
+HOW IT WORKS:
+1. Browser loads index.html → finds <div id="root">
+2. main.jsx runs → creates React root on that div
+3. Renders <App /> component inside <StrictMode>
+
+SIMPLE ANALOGY:
+- Think of it as plugging in the power cable. Without this, nothing starts.
+
+
+==============================================================
+PAGE 2: App.jsx (Root Component - Brain of the App)
+==============================================================
+FILE: src/App.jsx
+
+PURPOSE:
+- Controls the ENTIRE app flow.
+- Manages: login state, current user, which page to show.
+
+KEY CONCEPTS:
+
+1. useState() Hook:
+   - const [isLoggedIn, setIsLoggedIn] = useState(false)
+     → Tracks if user is logged in (true/false)
+   - const [user, setUser] = useState('')
+     → Stores the logged-in username
+   - const [currentPage, setCurrentPage] = useState('home')
+     → Tracks which page (home/about/contact) is active
+
+2. handleLogin(username):
+   - Called when Login component says "credentials are correct"
+   - Sets isLoggedIn = true and stores the username
+
+3. handleLogout():
+   - Resets everything — logs user out, goes back to login screen
+   - Resets currentPage to 'home'
+
+4. Conditional Rendering:
+   - if (!isLoggedIn) → show <Login /> page
+   - if (isLoggedIn)  → show Sidebar + main content area
+
+5. renderPage() function:
+   - Uses a switch statement to decide which component to render
+   - 'home'    → <Home />
+   - 'about'   → <About />
+   - 'contact' → <Contact />
+
+6. Props passed down:
+   - <Login onLogin={handleLogin} />
+     → Gives Login the ability to tell App "login successful"
+   - <Navbar user={user} onLogout={handleLogout} currentPage={currentPage} onNavigate={setCurrentPage} />
+     → Gives Navbar: username, logout function, current page, and page switcher
+
+FLOW:
+  App loads → isLoggedIn is false → shows Login page
+  User logs in → isLoggedIn becomes true → shows Sidebar + Home
+  User clicks About → currentPage changes → About renders
+  User clicks Logout → everything resets → Login page again
+
+
+==============================================================
+PAGE 3: login.jsx (Login Page - Centered Card)
+==============================================================
+FILE: src/components/login.jsx
+
+PURPOSE:
+- Full-page centered login card on a gradient background.
+- Validates credentials with specific error messages.
+- Card shakes on wrong input.
+
+KEY CONCEPTS:
+
+1. Props:
+   - { onLogin } → A function received from App.jsx
+   - Called when login is successful: onLogin(username)
+
+2. State Variables:
+   - username   → What user types in username field
+   - password   → What user types in password field
+   - error      → Error message string (empty = no error)
+   - shake      → Boolean to trigger shake animation on wrong input
+
+3. handleSubmit(e):
+   - e.preventDefault()  → Stops the form from refreshing the page
+   - Validation chain:
+     • Both empty?     → "Please enter your username and password"
+     • No username?    → "Please enter your username"
+     • No password?    → "Please enter your password"
+     • Wrong username? → "We don't recognize that username"
+     • Wrong password? → "Wrong password. Try again"
+     • All correct?    → Calls onLogin(username) → goes to home page
+
+4. triggerShake():
+   - Sets shake = true → CSS shake animation plays
+   - setTimeout 500ms → sets shake = false (animation stops)
+
+5. Conditional CSS class:
+   - className={`login-card ${shake ? 'shake' : ''}`}
+   - Template literal: adds 'shake' class only when shake is true
+
+6. onChange handlers:
+   - When user types, it updates the state AND clears any error message
+
+7. Demo Credentials:
+   - Username: sohan
+   - Password: 12345
+
+LAYOUT:
+   ┌───────────────────────────────────────────┐
+   │         (gradient background)             │
+   │                                           │
+   │         ┌──────────────────┐              │
+   │         │    Sign in       │              │
+   │         │  [username]      │              │
+   │         │  [password]      │              │
+   │         │  [Sign in btn]   │              │
+   │         │  Demo: sohan/123 │              │
+   │         └──────────────────┘              │
+   │                                           │
+   └───────────────────────────────────────────┘
+
+
+==============================================================
+PAGE 4: Navbar.jsx (Sidebar Navigation)
+==============================================================
+FILE: src/components/Navbar.jsx
+
+PURPOSE:
+- Left sidebar that lets user navigate between pages.
+- Shows which page is active (highlighted).
+- Shows welcome message and logout button.
+
+KEY CONCEPTS:
+
+1. Props received:
+   - user          → Username to display ("Welcome, sohan")
+   - onLogout      → Function to call when Logout is clicked
+   - currentPage   → Which page is currently active ('home'/'about'/'contact')
+   - onNavigate    → Function to switch pages (calls setCurrentPage in App)
+
+2. Active state:
+   - className={currentPage === 'home' ? 'active' : ''}
+   - If currentPage matches, adds 'active' class → highlight in CSS
+
+3. onClick handlers:
+   - onClick={() => onNavigate('home')}
+   - Clicking a menu item tells App.jsx to change the currentPage state
+
+4. Sidebar Footer:
+   - Shows "Welcome, {user}" with the username in bold
+   - Logout button calls onLogout → resets App state → shows Login again
+
+LAYOUT:
+   ┌──────────┐
+   │  Menu    │
+   │──────────│
+   │ • Home   │  ← highlighted when active
+   │ • About  │
+   │ • Contact│
+   │          │
+   │──────────│
+   │ Welcome, │
+   │  sohan   │
+   │ [Logout] │
+   └──────────┘
+
+
+==============================================================
+PAGE 5: Home.jsx (Home Page)
+==============================================================
+FILE: src/components/Home.jsx
+
+PURPOSE:
+- Simple landing page shown after login.
+- Default page when user first logs in.
+
+KEY CONCEPTS:
+- Functional component (no state needed)
+- Returns JSX with a heading and paragraph
+- Imported and rendered by App.jsx when currentPage === 'home'
+
+
+==============================================================
+PAGE 6: About.jsx (About Page)
+==============================================================
+FILE: src/components/About.jsx
+
+PURPOSE:
+- About page with information about the application.
+- Shown when user clicks "About" in sidebar.
+
+KEY CONCEPTS:
+- Functional component (no state needed)
+- Returns JSX with a heading and paragraph
+- Rendered by App.jsx when currentPage === 'about'
+
+
+==============================================================
+PAGE 7: Contact.jsx (Contact Page)
+==============================================================
+FILE: src/components/Contact.jsx
+
+PURPOSE:
+- Contact page for reaching out.
+- Shown when user clicks "Contact" in sidebar.
+
+KEY CONCEPTS:
+- Functional component (no state needed)
+- Returns JSX with a heading and paragraph
+- Rendered by App.jsx when currentPage === 'contact'
+
+
+==============================================================
+REACT CONCEPTS USED SO FAR:
+==============================================================
+1. useState()          → Managing state (login, user, page, errors)
+2. Props               → Passing data & functions between components
+3. Conditional Render  → Show Login OR Dashboard based on state
+4. Event Handling      → onClick, onSubmit, onChange
+5. e.preventDefault()  → Stop form from refreshing page
+6. Template Literals   → Dynamic className with backticks
+7. Switch Statement    → Page routing without a router library
+8. setTimeout          → Delay for shake animation reset
+9. Functional Comps    → All components are functions (no classes)
+10. JSX                → HTML-like syntax inside JavaScript
+11. export default     → Makes component available for import
+12. Fragments (<>)     → Group elements without extra DOM nodes
+
+==============================================================
+APP FLOW SUMMARY:
+==============================================================
+Browser → index.html → main.jsx → <App />
+  ↓
+  App checks: isLoggedIn?
+  ↓ NO                    ↓ YES
+  Show Login Page         Show Sidebar + Page Content
+  ↓                         ↓
+  Enter sohan/12345       Click Home/About/Contact
+  ↓                         ↓
+  onLogin() called        currentPage changes → re-render
+  ↓
+  isLoggedIn = true → Dashboard loads
+
+==============================================================
+  END OF NOTES (will be updated as we add more features)
+==============================================================
